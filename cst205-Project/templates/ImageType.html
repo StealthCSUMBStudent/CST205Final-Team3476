@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Playlist Results</title>
+      {{ bootstrap.load_css() }}
+  </head>
+<body>
+    <div class="container mb-4">  
+      <div class="card mt-4">
+        <div class="card-body">
+          <h2 class="card-title">Author's currently searched.</h2>
+          <ul class="list-group">
+            {% for item in authors %}
+              <li id= "demo" class="list-group-item">{{ item.author }}</li>
+                {% if item.author == "alejandro" or item.author=="escamilla" or item.author=="alejandro escamilla" %}
+                  <p1><img height= 300 width=500 src=https://images.unsplash.com/flagged/1/apple-gear-looking-pretty.jpg/></p1>
+                {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="card-footer">
+          <a href="{{ url_for('index') }}" class="card-link">Take me home</a>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
