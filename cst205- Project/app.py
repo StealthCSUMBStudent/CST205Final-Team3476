@@ -3,7 +3,6 @@ import requests
 
 app = Flask(__name__)
 
-open_ai_key = 'sk-proj-gd0elrXdmLbvGSWqbujDT3BlbkFJI3PTDMXa5lyk6WxD6GWf'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -19,11 +18,13 @@ if __name__ == '__main__':
 def aiGeneration():
     endpoint = 'https://api.openai.com/v1/images/generations'
     header = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {open_ai_key}'
+        # 'Content-Type': 'application/json',
+        'Authorization': f'Bearer {project_key}',
+        # 'OpenAI-Organization': 'org-2bHSR4U2Px92fzbE4ITpLcYm',
+        # 'OpenAI-Project': project_key
     }
     params = {
-        'model': 'dall-e-3',
+        'model': 'dall-e-2',
         'prompt': 'a white fox',
     }
 
