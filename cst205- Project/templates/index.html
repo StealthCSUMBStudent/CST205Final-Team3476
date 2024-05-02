@@ -13,36 +13,58 @@
             <button type="submit">Search</button>
         </form>
     </div>
+    <!--Could add filters for user to select, like number of results for each, to return only vector/photo/video/ai/etc.
+     and how it is displayed(slideshow, grid, etc)-->
+    <!--Could add a connection for each result to display more info, like author and souce, and features
+         like ability to download img, enlarge image, and add image processing that can also be downloaded  -->
+    {% if term %}
     <div>
-        {% if images %}
-            <h2>Images</h2>
+        {% if photos %}
+            <h2>Photographs of "{{term}}"</h2>
             <div>
-                {% for image in images %}
-                    <img src="{{ image }}" width="640" height="360" lt="Image">
+                {% for photo in photos %}
+                    <img src="{{ photo }}" width="320" height="240" lt="Image">
                 {% endfor %}
             </div>
+        {% else %}
+        <h1>No photographs found for {{term}}.</h1>
+        {% endif %}
+    </div>
+    <div>
+        {% if illustrations %}
+            <h2>Illustrations of "{{term}}"</h2>
+            <div>
+                {% for ill in illustrations %}
+                    <img src="{{ ill }}" width="320" height="240" lt="Image">
+                {% endfor %}
+            </div>
+        {% else %}
+        <h1>No illustrations found for {{term}}.</h1>
         {% endif %}
     </div>
     <div> 
+        <!-- videos has more data like author and url that might be used-->
         {% if videos %}
-            <h2>Videos</h2>
+            <h2>Videos Results of "{{term}}"</h2>
             <div>
                 {% for video in videos %}
-                    <video width="640" height="360" controls>
+                    <video width="320" height="240" controls>
                         <source src="{{ video['mp4'] }}" type="video/mp4">
                     </video>
                 {% endfor %}
             </div>
+        {% else %}
+            <h1>No video results found for "{{term}}"".</h1>
         {% endif %}
     </div>
-
+    {% endif %}
     <!-- Display unique tags as paragraph -->
     <div>
         {% if unique_tags %}
             <h2>Unique Tags</h2>
             <p>
                 {% for tag in unique_tags %}
-                    {{ tag }}{% if not loop.last %} {% endif %}
+                    {{ tag }},{% if not loop.last %} {% endif %}
                 {% endfor %}
             </p>
         {% endif %}

@@ -4,9 +4,11 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from datetime import datetime
+from images_api import *
 import requests
 import json
 import pprint
+import random
 
 #flask --app app --debug run
 app = Flask(__name__)
@@ -16,29 +18,17 @@ bootstrap = Bootstrap5(app)
 def index():
     pixa_bay_key= '43673995-6b601f29737528af485dab3da'#pixabay
     pexel_key = "N8DEUbwaWvewRx1e5S9tnHTKUGFcLvcHHEeXPaz2a378J5cAfLpaQVdu"
-    #https://www.pexels.com/api/documentation/
     #images api
-    images = []
-    unique_tags = []  
-
+    #https://www.pexels.com/api/documentation/
     search_term = request.args.get('searchterm')  # Extract search term from query parameters
-
+    photos = []
+    unique_tags = [] 
+    illustrations = []
     if search_term:
-        response = requests.get(f"https://pixabay.com/api/?key={pixa_bay_key}&q={search_term}")
-        if response.status_code == 200:
-            data = response.json()
-            #pprint.pprint(data)  # Debug print statement to check fetched data
-            for image in data['hits']:
-                images.append(image['webformatURL'])
-                tags = image['tags'].split(',')
-                for tag in tags:
-                    tag = tag.strip()
-                    if tag not in unique_tags:
-                        unique_tags.append(tag)
-            #pprint.pprint(images)  # Debug print statement to check fetched images
-            #print(unique_tags)  # Debug print statement to check fetched unique tags
-        else:
-            print("Failed to retrieve data from Pixabay API")
+       photos,unique_tags = get_photos(search_term,pixa_bay_key)
+       
+       illustrations = get_illustrations(search_term,pixa_bay_key)
+
     #Video api
     videos = []
     headers = {
@@ -50,7 +40,7 @@ def index():
     endpoint = 'https://api.pexels.com/videos/search?'
     if search_term:
         r = requests.get(endpoint, params=payload,headers=headers)
-        if response.status_code == 200:
+        if r.status_code == 200:
             data = r.json()
             for video in data["videos"]:
                 vid_data:dict = {}
@@ -66,10 +56,16 @@ def index():
                 #pprint.pprint(len(data["videos"][0]["video_files"]))
                 #pprint.pprint(data["videos"][0]["video_files"][0])
                 videos.append(vid_data)
-                pprint.pprint(vid_data)
+                #pprint.pprint(vid_data)
         else:
             print('Video Api failed to return')
-    return render_template('index.html', images=images, unique_tags=unique_tags, videos=videos)
+    random.shuffle(photos)
+    random.shuffle(illustrations)
+    random.shuffle(videos)
+    #photos = []
+    #illustrations = []
+    return render_template('index.html', photos=photos, illustrations=illustrations, unique_tags=unique_tags, 
+                            videos=videos, term=search_term)
 
 
 
