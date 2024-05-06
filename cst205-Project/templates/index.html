@@ -24,7 +24,7 @@ img {vertical-align: middle;}
   width: auto;
   padding: 16px;
   margin-top: -22px;
-  color: white;
+  color: rgb(0, 0, 0);
   font-weight: bold;
   font-size: 18px;
   transition: 0.6s ease;
@@ -97,49 +97,57 @@ img {vertical-align: middle;}
 </style>
 </head>
 <body>
-    <h1>Search Images</h1>
-    <form method="GET" action="/">
-        <input type="text" name="author" placeholder="Enter search term" required>
-        <button type="submit">Search</button>
-    </form>
+  <h1>Search Images</h1>
+  <form method="GET" action="/">
+      <input type="text" name="author" placeholder="Enter search term" required>
+      <button type="submit">Search</button>
+  </form>
 
-    <div class="slideshow-container">
-        {% if images %}
-            {% for image in images %}
-                <div class="mySlides fade">
-                    <img src="{{ image }}" alt="Image" height="500" width="500">
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+  <div class="slideshow-container">
+      {% if images %}
+          {% for image in images %}
+              <div class="mySlides fade">
+                  <img src="{{ image }}" alt="Image" height="500" width="500">
+              </div>
+          {% endfor %}
+      {% endif %}
+  </div>
 
-    <!-- Display unique tags as paragraph -->
-    <div>
-        {% if unique_tags %}
-            <h2>Unique Tags</h2>
-            <p>
-                {% for tag in unique_tags %}
-                    {{ tag }}{% if not loop.last %} {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
-    </div>
-    <script>
-        var slideIndex = 0;
-        showSlides();
-    
-        function showSlides() {
-            var slides = document.getElementsByClassName("mySlides");
-            for (var i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) {
-                slideIndex = 1;
-            }
-            slides[slideIndex - 1].style.display = "block";
-            setTimeout(showSlides, 5000); // Change image every 2 seconds
-        }
-    </script>
+  <!-- Display unique tags as paragraph -->
+  <div>
+      {% if unique_tags %}
+          <h2>Unique Tags</h2>
+          <p>
+              {% for tag in unique_tags %}
+                  {{ tag }}{% if not loop.last %} {% endif %}
+              {% endfor %}
+          </p>
+      {% endif %}
+  </div>
+  <button class="prev" onclick="plusSlides(-1)">❮</button>
+  <button class="next" onclick="plusSlides(1)">❯</button>
+  <script>
+      var slideIndex = 1;
+      showSlides(slideIndex);
+
+      function plusSlides(n) {
+          showSlides(slideIndex += n);
+      }
+
+      function currentSlide(n) {
+          showSlides(slideIndex = n);
+      }
+
+      function showSlides(n) {
+          var i;
+          var slides = document.getElementsByClassName("mySlides");
+          if (n > slides.length) {slideIndex = 1}    
+          if (n < 1) {slideIndex = slides.length}
+          for (i = 0; i < slides.length; i++) {
+              slides[i].style.display = "none";  
+          }
+          slides[slideIndex-1].style.display = "block";  
+      }
+  </script>
 </body>
 </html>
