@@ -6,10 +6,32 @@
     <title>Image Search</title>
 </head>
 <body>
-    <h1>Search Images by Author</h1>
-    <form method="POST">
-        <input type="text" name="author" placeholder="Enter author's name" required>
+    <h1>Search Images</h1>
+    <form method="GET" action="/">
+        <input type="text" name="author" placeholder="Enter search term" required>
         <button type="submit">Search</button>
     </form>
+
+    <div>
+        {% if images %}
+            <h2>Images</h2>
+            <div>
+                {% for image in images %}
+                    <img src="{{ image }}" alt="Image">
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if unique_tags %}
+            <h2>Unique Tags</h2>
+            <p>
+                {% for tag in unique_tags %}
+                    {{ tag }}{% if not loop.last %} {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+    </div>
 </body>
 </html>
