@@ -8,19 +8,31 @@
         * {box-sizing: border-box}
         body {font-family: Verdana, sans-serif; margin:0}
         .mySlides {display: none}
+        .mySlidesIllu {display: none}
+        .mySlidesVideo {display: none}
         img {vertical-align: middle;}
         
         /* Slideshow container */
         .slideshow-container {
           max-width: 1000px;
           position: relative;
+          display: flex;
+          justify-content: center; 
+          align-items: center;
           margin: auto;
+        }
+
+        .buttons-container {
+            justify-content: relative; 
+            align-items: relative;
+            margin: auto;
+            margin-bottom: 40px;
         }
         
         /* Next & previous buttons */
         .prev, .next {
           cursor: pointer;
-          position: absolute;
+          position: static;
           top: 50%;
           width: auto;
           padding: 16px;
@@ -111,11 +123,15 @@
     <!--Could add a connection for each result to display more info, like author and souce, and features
          like ability to download img, enlarge image, and add image processing that can also be downloaded  -->
     {% if term %}
+    <h2>Photographs of "{{term}}"</h2>
+    <button class="prev" onclick="plusSlides(-1)">❮</button>
+    <button class="next" onclick="plusSlides(1)">❯</button>
     <div class="slideshow-container">
         {% if photos %}
-            <h2>Photographs of "{{term}}"</h2>
             <div>
                 {% for photo in photos %}
+                <div class = "buttons">
+                </div>
                     <div class="mySlides fade">
                         <img src="{{ photo }}" width="320" height="240" alt="Image">
                     </div>
@@ -125,27 +141,37 @@
         <h1>No photographs found for {{term}}.</h1>
         {% endif %}
     </div>
+    <h2>Illustrations of "{{term}}"</h2>
+    <button class="prev" onclick="plusSlidesIllu(-1)">❮</button>
+    <button class="next" onclick="plusSlidesIllu(1)">❯</button>
     <div class="slideshow-container">
         {% if illustrations %}
-            <h2>Illustrations of "{{term}}"</h2>
             <div>
                 {% for ill in illustrations %}
+                <div class = "buttons-container">
+                </div>
+                    <div class="mySlidesIllu fade">
                         <img src="{{ ill }}" width="320" height="240" alt="Image"> 
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
         <h1>No illustrations found for {{term}}.</h1>
         {% endif %}
     </div>
+    <h2>Videos Results of "{{term}}"</h2>
+    <button class="prev" onclick="plusSlidesVideo(-1)">❮</button>
+    <button class="next" onclick="plusSlidesVideo(1)">❯</button>
     <div class="slideshow-container">
         <!-- videos has more data like author and url that might be used-->
         {% if videos %}
-            <h2>Videos Results of "{{term}}"</h2>
             <div>
                 {% for video in videos %}
+                    <div class="mySlidesVideo fade">
                         <video width="320" height="240" controls>
                             <source src="{{ video['mp4'] }}" type="video/mp4">
                         </video>
+                    </div>
                 {% endfor %}
             </div>
         {% else %}
@@ -164,14 +190,25 @@
             </p>
         {% endif %}
     </div>
-    <button class="prev" onclick="plusSlides(-1)">❮</button>
-    <button class="next" onclick="plusSlides(1)">❯</button>
+
     <script>
         var slideIndex = 1;
+        var slideIndexIllu = 0;
+        var slideIndexVideo = 0;
         showSlides(slideIndex);
+        showSlidesIllu(slideIndexIllu);
+        showSlidesVideo(slideIndexVideo);
   
         function plusSlides(n) {
             showSlides(slideIndex += n);
+        }
+
+        function plusSlidesIllu(n) {
+            showSlidesIllu(slideIndexIllu += n);
+        }
+
+        function plusSlidesVideo(n) {
+            showSlidesVideo(slideIndexVideo += n);
         }
   
         function currentSlide(n) {
@@ -187,6 +224,26 @@
                 slides[i].style.display = "none";  
             }
             slides[slideIndex-1].style.display = "block";  
+        }
+        function showSlidesIllu(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlidesIllu");
+            if (n > slides.length) {slideIndexIllu = 1}    
+            if (n < 1) {slideIndexIllu = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+            }
+            slides[slideIndexIllu-1].style.display = "block";  
+        }
+        function showSlidesVideo(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlidesVideo");
+            if (n > slides.length) {slideIndexVideo = 1}    
+            if (n < 1) {slideIndexVideo = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+            }
+            slides[slideIndexVideo-1].style.display = "block";  
         }
     </script>
 </body>
