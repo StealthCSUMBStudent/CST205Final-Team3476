@@ -21,12 +21,14 @@ def index():
     #images api
     #https://www.pexels.com/api/documentation/
     search_term = request.args.get('searchterm')  # Extract search term from query parameters
+    search_type = request.args.get('searchtype')
+    print(f"SEARCH TERM: {search_term}")
+    print(f"TYPE:{search_type}")
     photos = []
     unique_tags = [] 
     illustrations = []
     if search_term:
        photos,unique_tags = get_photos(search_term,pixa_bay_key)
-       
        illustrations = get_illustrations(search_term,pixa_bay_key)
 
     #Video api
@@ -65,7 +67,7 @@ def index():
     #photos = []
     #illustrations = []
     return render_template('index.html', photos=photos, illustrations=illustrations, unique_tags=unique_tags, 
-                            videos=videos, term=search_term)
+                            videos=videos, term=search_term, type=search_type)
 
 
 
