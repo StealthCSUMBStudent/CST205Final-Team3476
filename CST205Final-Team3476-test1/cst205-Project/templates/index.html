@@ -22,6 +22,24 @@
           margin: auto;
         }
 
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Adjust the column width as needed */
+            gap: 10px; /* Adjust the gap between images */
+        }
+
+        .zoom {
+            content: "LOADING";
+            padding: 0px;
+            transition: transform .2s; /* Animation */
+            width: 320px;
+            height: 240px;
+        }
+
+        .zoom:hover {
+            transform: scale(1.5); /* (150% zoom) */
+        }
+
         .buttons-container {
             justify-content: relative; 
             align-items: relative;
@@ -113,9 +131,15 @@
 <body>
     <div style="text-align: center;">
         <h1>Search For Images and Videos</h1>
-        <form method="GET" action="/">
-            <input type="text" name="searchterm" placeholder="Enter search term" required>
+        <h2>Click an image to see the full size</h2>
+        <form id="searchForm" method="GET" action="/">
+            <input type="text" name="searchterm" id="searchterm" placeholder="Enter search term" required>
             <button type="submit">Search</button>
+            <br>
+            <input type="radio" name="searchtype" value="grid" id="grid_btn" checked>
+            <label for="grid_btn">Grid</label>
+            <input type="radio" name="searchtype" value="slideshow" id="slide_btn">
+            <label for="slide_btn">Slideshow</label>
         </form>
     </div>
     <!--Could add filters for user to select, like number of results for each, to return only vector/photo/video/ai/etc.
@@ -123,62 +147,107 @@
     <!--Could add a connection for each result to display more info, like author and souce, and features
          like ability to download img, enlarge image, and add image processing that can also be downloaded  -->
     {% if term %}
-    <h2>Photographs of "{{term}}"</h2>
-    <button class="prev" onclick="plusSlides(-1)">❮</button>
-    <button class="next" onclick="plusSlides(1)">❯</button>
-    <div class="slideshow-container">
         {% if photos %}
-            <div>
-                {% for photo in photos %}
-                <div class = "buttons">
+        <h2>Photographs of "{{term}}"</h2>
+        {% if type == "grid" %}
+            <div class="grid-container">
+            {% for photo in photos %}
+                <div class="zoom">
+                    <a href="{{ photo }}">
+                        <img src="{{ photo }}" width="320" height="240" lt="Image">
+                    </a>
                 </div>
-                    <div class="mySlides fade">
-                        <img src="{{ photo }}" width="320" height="240" alt="Image">
-                    </div>
-                {% endfor %}
+            {% endfor %}
             </div>
         {% else %}
-        <h1>No photographs found for {{term}}.</h1>
+            <button class="prev" onclick="plusSlides(-1)">❮</button>
+            <button class="next" onclick="plusSlides(1)">❯</button>
+            <div class="slideshow-container">
+            {% for photo in photos %}
+                <div class="mySlides fade">
+                    <div class="zoom">
+                        <a href="{{ photo }}">
+                            <img src="{{ photo }}" width="320" height="240" alt="Image">
+                        </a>
+                    </div>
+                </div>
+            {% endfor %} 
+                </div>
+        {% endif %} <!--End for "grid conditonal"-->
+
+        {% else %}<!-- else statement is no content is present-->
+            <h1>No photographs found for {{term}}.</h1>
         {% endif %}
-    </div>
-    <h2>Illustrations of "{{term}}"</h2>
-    <button class="prev" onclick="plusSlidesIllu(-1)">❮</button>
-    <button class="next" onclick="plusSlidesIllu(1)">❯</button>
-    <div class="slideshow-container">
+
         {% if illustrations %}
+        <h2>Illustrations of "{{term}}"</h2>
+        {% if type == "grid" %}
+            <div class="grid-container">
+            {% for ill in illustrations %}
+                <div class="zoom">
+                    <a href="{{ ill }}">
+                        <img src="{{ ill }}" width="320" height="240" lt="Image">
+                    </a>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+        <button class="prev" onclick="plusSlidesIllu(-1)">❮</button>
+        <button class="next" onclick="plusSlidesIllu(1)">❯</button>
+        <div class="slideshow-container">
             <div>
                 {% for ill in illustrations %}
-                <div class = "buttons-container">
-                </div>
+                <div class = "buttons-container"></div>
                     <div class="mySlidesIllu fade">
-                        <img src="{{ ill }}" width="320" height="240" alt="Image"> 
+                        <div class="zoom">
+                            <a href="{{ ill }}">
+                                <img src="{{ ill }}" width="320" height="240" alt="Image"> 
+                            </a>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
-        {% else %}
-        <h1>No illustrations found for {{term}}.</h1>
+        </div>
+        {% endif %} <!--End for "grid conditonal"-->
+
+        {% else %}<!-- else statement is no content is present-->
+            <h1>No illustrations found for {{term}}.</h1>
         {% endif %}
-    </div>
-    <h2>Videos Results of "{{term}}"</h2>
-    <button class="prev" onclick="plusSlidesVideo(-1)">❮</button>
-    <button class="next" onclick="plusSlidesVideo(1)">❯</button>
-    <div class="slideshow-container">
+
+       
         <!-- videos has more data like author and url that might be used-->
         {% if videos %}
-            <div>
-                {% for video in videos %}
-                    <div class="mySlidesVideo fade">
-                        <video width="320" height="240" controls>
-                            <source src="{{ video['mp4'] }}" type="video/mp4">
-                        </video>
-                    </div>
-                {% endfor %}
+        <h2>Videos Results of "{{term}}"</h2>
+        {% if type == "grid" %}
+            <div class="grid-container">
+            {% for video in videos %}
+                <video width="320" height="240" controls>
+                    <source src="{{ video['mp4'] }}" type="video/mp4">
+                </video>
+            {% endfor %}
             </div>
-        {% else %}
+        {%else %}
+            <button class="prev" onclick="plusSlidesVideo(-1)">❮</button>
+            <button class="next" onclick="plusSlidesVideo(1)">❯</button>
+            <div class="slideshow-container">
+                <div>
+                    {% for video in videos %}
+                        <div class="mySlidesVideo fade">
+                            <video width="320" height="240" controls>
+                                <source src="{{ video['mp4'] }}" type="video/mp4">
+                            </video>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %} <!--End for "grid conditonal"-->
+
+        {% else %}<!-- else statement is no content is present-->
             <h1>No video results found for "{{term}}"".</h1>
         {% endif %}
-    </div>
-    {% endif %}
+    
+    {% endif %} <!--End statement for search term -->
+
     <!-- Display unique tags as paragraph -->
     <div>
         {% if unique_tags %}
@@ -245,6 +314,23 @@
             }
             slides[slideIndexVideo-1].style.display = "block";  
         }
+   
+    function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    window.onload = function () {
+        const searchTypeRadio = document.getElementsByName('searchtype');
+        const searchType = getQueryParameter('searchtype');
+        if (searchType) {
+            searchTypeRadio.forEach(function (radio) {
+                if (radio.value === searchType) {
+                    radio.checked = true;
+                }
+            });
+        }
+    };
     </script>
 </body>
 </html>

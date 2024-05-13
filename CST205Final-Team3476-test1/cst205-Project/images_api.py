@@ -19,7 +19,7 @@ def get_photos(search_term, pixa_bay_key):
         if (data['total'] != 0):
             #pprint.pprint(data["hits"])  # Debug print statement to check fetched data
             for photo in data['hits']:
-                print(f"Type: {photo["type"]}")
+                #print(f"Type: {photo["type"]}")
                 photos.append(photo['webformatURL'])
                 tags = photo['tags'].split(',')
                 for tag in tags:
@@ -40,6 +40,6 @@ def get_illustrations(search_term, pixa_bay_key):
         data = illustration_r.json()
         if (data['total'] != 0):
             for illustration in data['hits']:
-                print(f"Type: {illustration["type"]}")
+                #print(f"Type: {illustration["type"]}")
                 illustrations.append(illustration['webformatURL'])
     return illustrations
