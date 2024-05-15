@@ -1,20 +1,21 @@
-from PIL import Image
+import requests
+import json
+import random
+import base64
+from io import BytesIO
 from flask import Flask, render_template, request, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-from datetime import datetime
 from images_api import *
-import requests
-import json
-import pprint
-import random
+# from ai_api import get_ai_images
 
 #flask --app app --debug run
 app = Flask(__name__)
 bootstrap = Bootstrap5(app)
 
+tags = []
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -27,11 +28,14 @@ def index():
     print(f"SEARCH TERM: {search_term}")
     print(f"TYPE:{search_type}")
     photos = []
-    unique_tags = [] 
     illustrations = []
+    unique_tags = []
     if search_term:
        photos,unique_tags = get_photos(search_term,pixa_bay_key)
        illustrations = get_illustrations(search_term,pixa_bay_key)
+
+    global tags
+    tags = unique_tags.copy()
 
     #Video api
     videos = []
@@ -72,36 +76,43 @@ def index():
                             videos=videos, term=search_term, type=search_type)
 
 
-
-
-
-@app.route('/ai')
-def route():
-    print('working')
-    return render_template('ai.html')
-
 @app.route('/api/aiImages')
 def aiGeneration():
-    url = "https://stable-diffusion9.p.rapidapi.com/generate"
+    # url = "https://stable-diffusion9.p.rapidapi.com/generate"
 
-    payload = {
-        "prompt": "dogs",
-        "style": "manga",
-        "seed": 2
-    }
+    prompt = ' '.join(tags)
+    print(prompt)
+    # payload = {
+    #     "prompt": prompt,
+    #     "style": "photographic",
+    #     "seed": 0
+    # }
+    # headers = {
+    #     "content-type": "application/json",
+    #     "X-RapidAPI-Key": "8867e01260msha8bab1ebf526c14p17d658jsn7f3f3686d05d",
+    #     "X-RapidAPI-Host": "stable-diffusion9.p.rapidapi.com"
+    # }
+
+    url = "https://text-to-image13.p.rapidapi.com/"
+
+    payload = { "prompt": prompt }
     headers = {
         "content-type": "application/json",
-        "X-RapidAPI-Key": "8867e01260msha8bab1ebf526c14p17d658jsn7f3f3686d05d",
-        "X-RapidAPI-Host": "stable-diffusion9.p.rapidapi.com"
+        "X-RapidAPI-Key": "5bf9d2f08cmshd09cc10a30ac230p1c0176jsnf088f771ba07",
+        "X-RapidAPI-Host": "text-to-image13.p.rapidapi.com"
     }
 
     images = []
-    for i in range(0, 2):
+    # response = requests.post(url, json=payload, headers=headers)
+    for i in range(0, 3):
         response = requests.post(url, json=payload, headers=headers)
 
         if response.status_code == 200:
             try:
-                images.append(response.json()['url'])
+                # print(response.content)
+                image_data = BytesIO(response.content)
+                img = base64.b64encode(image_data.getvalue()).decode()
+                images.append({'data': img})
             except:
                 print('didn\'t work')
         else:
@@ -110,7 +121,7 @@ def aiGeneration():
     if len(images) != 0:
         return jsonify(images)
     else:
-        return None
+        return jsonify({'error': 'Nothing returned from API'})
 
 
 if __name__ == '__main__':
