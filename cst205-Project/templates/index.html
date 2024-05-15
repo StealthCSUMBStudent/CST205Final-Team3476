@@ -1,10 +1,18 @@
+<!--
+Course: CST-205
+Title: Photo and Image Search
+Authors: Jonathan Ngo, Judah Silva, Michael Huziy, Nikolas Lopez
+Date: 05/14/2024
+Abstract: This project creates a Flask app that allows the user to search for images and videos based on entered key words. Also generates AI images based on the tags of the returned images.
+Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Search</title>
-    <style>
+    <style> /* Worked on by Jonathan Ngo */
         * {box-sizing: border-box}
         body {font-family: Verdana, sans-serif; margin:0}
         .mySlides {display: none}
@@ -128,7 +136,7 @@
         
 </style>
 </head>
-<body>
+<body> <!-- Worked on by everyone -->
     <div style="text-align: center;">
         <h1>Search For Images and Videos</h1>
         <h2>Click an image to see the full size</h2>
@@ -146,10 +154,10 @@
      and how it is displayed(slideshow, grid, etc)-->
     <!--Could add a connection for each result to display more info, like author and souce, and features
          like ability to download img, enlarge image, and add image processing that can also be downloaded  -->
-    {% if term %}
-        {% if photos %}
+    {% if term %} <!-- If something has been searched-->
+        {% if photos %} <!-- If photos have been returned from API -->
         <h2>Photographs of "{{term}}"</h2>
-        {% if type == "grid" %}
+        {% if type == "grid" %} <!-- Create grid view -->
             <div class="grid-container">
             {% for photo in photos %}
                 <div class="zoom">
@@ -159,7 +167,7 @@
                 </div>
             {% endfor %}
             </div>
-        {% else %}
+        {% else %} <!-- Create slideshow view -->
             <button class="prev" onclick="plusSlides(-1)">❮</button>
             <button class="next" onclick="plusSlides(1)">❯</button>
             <div class="slideshow-container">
@@ -179,9 +187,9 @@
             <h1>No photographs found for {{term}}.</h1>
         {% endif %}
 
-        {% if illustrations %}
+        {% if illustrations %} <!-- If illustrations have been returned from API -->
         <h2>Illustrations of "{{term}}"</h2>
-        {% if type == "grid" %}
+        {% if type == "grid" %} <!-- Create grid view -->
             <div class="grid-container">
             {% for ill in illustrations %}
                 <div class="zoom">
@@ -191,7 +199,7 @@
                 </div>
             {% endfor %}
             </div>
-        {% else %}
+        {% else %} <!-- Create slideshow view -->
         <button class="prev" onclick="plusSlidesIllu(-1)">❮</button>
         <button class="next" onclick="plusSlidesIllu(1)">❯</button>
         <div class="slideshow-container">
@@ -216,9 +224,9 @@
 
        
         <!-- videos has more data like author and url that might be used-->
-        {% if videos %}
+        {% if videos %} <!-- If videos have been returned from API -->
         <h2>Videos Results of "{{term}}"</h2>
-        {% if type == "grid" %}
+        {% if type == "grid" %} <!-- Create grid view -->
             <div class="grid-container">
             {% for video in videos %}
                 <video width="320" height="240" controls>
@@ -226,7 +234,7 @@
                 </video>
             {% endfor %}
             </div>
-        {%else %}
+        {%else %} <!-- Create slideshow view -->
             <button class="prev" onclick="plusSlidesVideo(-1)">❮</button>
             <button class="next" onclick="plusSlidesVideo(1)">❯</button>
             <div class="slideshow-container">
@@ -246,8 +254,8 @@
             <h1>No video results found for "{{term}}"".</h1>
         {% endif %}
 
-        <h1 id="aiHeader"></h1>
-        <div id="imageHolder" style="display: flex; justify-content: space-evenly; align-items: center"></div>
+        <h1 id="aiHeader"></h1> <!-- Header for AI info; handled differently than other API info -->
+        <div id="imageHolder" style="display: flex; justify-content: space-evenly; align-items: center"></div> <!-- div to hold the AI images -->
     
     {% endif %} <!--End statement for search term -->
 
@@ -264,77 +272,88 @@
     </div>
 
     <script>
-        var slideIndex = 1;
-        var slideIndexIllu = 0;
-        var slideIndexVideo = 0;
-  
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
+      // Various functions and variables to control the slideshow mechanics
+      // Worked on by Jonathan Ngo
+      var slideIndex = 1;
+      var slideIndexIllu = 0;
+      var slideIndexVideo = 0;
 
-        function plusSlidesIllu(n) {
-            showSlidesIllu(slideIndexIllu += n);
-        }
+      function plusSlides(n) {
+        showSlides(slideIndex += n);
+      }
 
-        function plusSlidesVideo(n) {
-            showSlidesVideo(slideIndexVideo += n);
-        }
+      function plusSlidesIllu(n) {
+        showSlidesIllu(slideIndexIllu += n);
+      }
+
+      function plusSlidesVideo(n) {
+        showSlidesVideo(slideIndexVideo += n);
+      }
+
+      function currentSlide(n) {
+        showSlides(slideIndex = n);
+      }
   
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
+      // Show photo slide at given index
+      function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";  
         }
+        slides[slideIndex-1].style.display = "block";  
+      }
+
+      // Show illustration slide at given index
+      function showSlidesIllu(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlidesIllu");
+        if (n > slides.length) {slideIndexIllu = 1}    
+        if (n < 1) {slideIndexIllu = slides.length}
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";  
+        }
+        slides[slideIndexIllu-1].style.display = "block";  
+      }
+
+      // Show video slide at given index
+      function showSlidesVideo(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlidesVideo");
+        if (n > slides.length) {slideIndexVideo = 1}    
+        if (n < 1) {slideIndexVideo = slides.length}
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";  
+        }
+        slides[slideIndexVideo-1].style.display = "block";  
+      }
   
-        function showSlides(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlides");
-            if (n > slides.length) {slideIndex = 1}    
-            if (n < 1) {slideIndex = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";  
-            }
-            slides[slideIndex-1].style.display = "block";  
-        }
-        function showSlidesIllu(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlidesIllu");
-            if (n > slides.length) {slideIndexIllu = 1}    
-            if (n < 1) {slideIndexIllu = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";  
-            }
-            slides[slideIndexIllu-1].style.display = "block";  
-        }
-        function showSlidesVideo(n) {
-            var i;
-            var slides = document.getElementsByClassName("mySlidesVideo");
-            if (n > slides.length) {slideIndexVideo = 1}    
-            if (n < 1) {slideIndexVideo = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";  
-            }
-            slides[slideIndexVideo-1].style.display = "block";  
-        }
-   
-    function getQueryParameter(name) {
+      // Get info from search query
+      function getQueryParameter(name) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
-    }
+      }
 
-    window.onload = function () {
+      // Keep whatever has been selected through the window load
+      window.onload = function () {
         const searchTypeRadio = document.getElementsByName('searchtype');
         const searchType = getQueryParameter('searchtype');
         if (searchType) {
-            searchTypeRadio.forEach(function (radio) {
-                if (radio.value === searchType) {
-                    radio.checked = true;
-                }
-            });
+          searchTypeRadio.forEach(function (radio) {
+            if (radio.value === searchType) {
+              radio.checked = true;
+            }
+          });
         }
-    };
+      };
 
-    async function fetchImages() {
-        // console.log('test')
+      // Function will call the API route and create image elements with the returned info
+      // Worked on by Judah Silva
+      async function fetchImages() {
         try {
+          // Create a header and placeholder images with loading gifs
           const h1 = document.getElementById('aiHeader');
           h1.textContent = 'AI image results of unique tags'
           h1.style.display = 'block';
@@ -344,22 +363,26 @@
             img.src = 'static/load-loading.gif'
             imageDiv.appendChild(img);
           }
+
+          // Call the API and get response
           const response = await fetch('/api/aiImages');
           const data = await response.json();
 
+          // If there was an issue with the AI Image API
           if ('error' in data) {
-            // const imageDiv = document.getElementById('imageHolder');
             h1.textContent = 'No AI image results.';
             h1.style.display = 'block';
             imageDiv.innerHTML = '';
-          } else {
-            // const header = document.getElementById('aiHeader');
-            // const imageDiv = document.getElementById('imageHolder');
+          }
+          // If the AI images were successfully created and returned
+          else {
             imageDiv.innerHTML = '';
+            // Loop through the returned array and fill out the image elements
             data.forEach((imageURL) => {
               const img = document.createElement('img');
+              // Credit: https://www.geeksforgeeks.org/how-to-display-base64-images-in-html/
               img.src = `data:image/png;base64,${imageURL['data']}`;
-              img.style.width = '200px';
+              img.style.width = '300px';
               imageDiv.appendChild(img);
             });
           }
@@ -368,9 +391,11 @@
         }
       }
 
+      // Don't call AI Image api if nothing has been searched
       if (getQueryParameter('searchterm') !== null) {
         fetchImages();
       }
+      // Get the first slide if slideshow is selected
       if (getQueryParameter('searchtype') === 'slideshow') {
         showSlides(slideIndex);
         showSlidesIllu(slideIndexIllu);
