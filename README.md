@@ -1,4 +1,4 @@
-This is the final project for team 3476: Members: Jonathan Ngo, Judah Silva, Michael Hzuiy, and Nikolas Lopez
+This is the final project for team 3476: Members: Jonathan Ngo, Judah Silva, Michael Huziy, and Nikolas Lopez
 
 Class: CST-205
 
