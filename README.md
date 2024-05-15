@@ -1,8 +1,11 @@
 This is the final project for team 3476: Members: Judah Silva, Michael Huziy, Nikolas Lopez, Jonathan Ngo
+
 Class: CST-205
+
 Date: 5/14/2024
 
 Our Trello: https://trello.com/b/thY1CSK9/cst205-final-project-3476 
+
 Our Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
 
 Our project is an image and video search, combined with AI image generation as well. 
