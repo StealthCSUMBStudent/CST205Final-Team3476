@@ -13,4 +13,4 @@ Our Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/Jon
 Our project is an image and video search combined with an ai image generation as well. 
 Utilizing OpenAI to generate images from text. Unsplash to get our images based on keywords and Pexel to retrieve videos based on keywords
 Two options exist, one to show a grid option and a slideshow option. Zooming in on a image or illustration will allow one to click the imaged zoomed in on and showing the full dimensions.
-Obviously zooming in doesn't apply on videos.
+Zooming in on videos naturally applies with the fullscreen function provided by html. 
