@@ -31,7 +31,7 @@ terms = ''
 @app.route('/', methods=['GET', 'POST'])
 def index():
     pixa_bay_key= '43673995-6b601f29737528af485dab3da'#pixabay
-    pexel_key = "N8DEUbwaWvewRx1e5S9tnHTKUGFcLvcHHEeXPaz2a378J5cAfLpaQVdu"
+    pexel_key = "3ZbuUWVJF64tauy9edJRIy3Bg9keAIAAjIzgbI2Q6IhMiK4IhAexJhad"
 
     #images api
     #https://www.pexels.com/api/documentation/
@@ -61,11 +61,13 @@ def index():
     payload = {
         'query': search_term #Can add query for different pages or number of videos returned
     }
-    endpoint = 'https://api.pexels.com/videos/search?'
+    endpoint = 'https://api.pexels.com/videos/search'
     if search_term:
+        print('getting videos')
         r = requests.get(endpoint, params=payload,headers=headers)
         if r.status_code == 200:
             data = r.json()
+            # print(data)
             # Pull out relevant info from json
             for video in data["videos"]:
                 vid_data:dict = {}
@@ -73,6 +75,7 @@ def index():
                 vid_data["vid_url"] = video["url"]
                 vid_data["author"] = video["user"]
                 videos.append(vid_data)
+                # print(vid_data)
         else:
             print('Video Api failed to return')
     
@@ -80,6 +83,7 @@ def index():
     random.shuffle(photos)
     random.shuffle(illustrations)
     random.shuffle(videos)
+    # print(videos)
 
     return render_template('index.html', photos=photos, illustrations=illustrations, unique_tags=unique_tags, 
                             videos=videos, term=search_term, type=search_type)
