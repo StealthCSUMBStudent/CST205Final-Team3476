@@ -255,10 +255,11 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         {% endif %}
 
         <h1 id="aiHeader"></h1> <!-- Header for AI info; handled differently than other API info -->
+       
         <div id="imageHolder" style="display: flex; justify-content: space-evenly; align-items: center"></div> <!-- div to hold the AI images -->
-    
+  
     {% endif %} <!--End statement for search term -->
-
+<br><br><br>
     <!-- Display unique tags as paragraph -->
     <div>
         {% if unique_tags %}
@@ -379,11 +380,14 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
             imageDiv.innerHTML = '';
             // Loop through the returned array and fill out the image elements
             data.forEach((imageURL) => {
-              const img = document.createElement('img');
-              // Credit: https://www.geeksforgeeks.org/how-to-display-base64-images-in-html/
-              img.src = `data:image/png;base64,${imageURL['data']}`;
-              img.style.width = '300px';
-              imageDiv.appendChild(img);
+              const div = document.createElement('div'); // Create a new div
+        div.classList.add('zoom'); // Add the class 'zoom' to the div
+        const img = document.createElement('img');
+        // Credit: https://www.geeksforgeeks.org/how-to-display-base64-images-in-html/
+        img.src = `data:image/png;base64,${imageURL['data']}`;
+        img.style.width = '300px';
+        div.appendChild(img); // Append the img to the div
+        imageDiv.appendChild(div); // Append the div to the imageDiv
             });
           }
         } catch (error) {
