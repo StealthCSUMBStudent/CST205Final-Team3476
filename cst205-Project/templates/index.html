@@ -133,27 +133,35 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         @media only screen and (max-width: 300px) {
           .prev, .next,.text {font-size: 11px}
         }
+        .grid-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center; /* Horizontally center the grid items */
+          margin: 0 auto; /* Center the grid container itself */
+        }
+        body {
+          background-color:lightgoldenrodyellow; 
+        }
         
 </style>
 </head>
-<body> <!-- Worked on by everyone -->
+<body> <!-- Worked on by Nikolas and Michael -->
     <div style="text-align: center;">
         <h1>Search For Images and Videos</h1>
         <h2>Click an image to see the full size</h2>
         <form id="searchForm" method="GET" action="/">
             <input type="text" name="searchterm" id="searchterm" placeholder="Enter search term" required>
             <button type="submit">Search</button>
-            <br>
+            <br><br>
             <input type="radio" name="searchtype" value="grid" id="grid_btn" checked>
             <label for="grid_btn">Grid</label>
             <input type="radio" name="searchtype" value="slideshow" id="slide_btn">
             <label for="slide_btn">Slideshow</label>
+            <input type="checkbox" name="generateAI" id="generateAI">
+            <label for="generateAI">Generate AI Images</label> 
         </form>
     </div>
-    <!--Could add filters for user to select, like number of results for each, to return only vector/photo/video/ai/etc.
-     and how it is displayed(slideshow, grid, etc)-->
-    <!--Could add a connection for each result to display more info, like author and souce, and features
-         like ability to download img, enlarge image, and add image processing that can also be downloaded  -->
+   <!--Started by Nikolas, Michael finished rest of images/videos, and integrated it with slideshow view-->
     {% if term %} <!-- If something has been searched-->
         {% if photos %} <!-- If photos have been returned from API -->
         <h2>Photographs of "{{term}}"</h2>
@@ -167,7 +175,7 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
                 </div>
             {% endfor %}
             </div>
-        {% else %} <!-- Create slideshow view -->
+        {% else %} <!-- Create slideshow view. Slide show itself created by Jonathon -->
             <button class="prev" onclick="plusSlides(-1)">❮</button>
             <button class="next" onclick="plusSlides(1)">❯</button>
             <div class="slideshow-container">
@@ -251,7 +259,7 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         {% endif %} <!--End for "grid conditonal"-->
 
         {% else %}<!-- else statement is no content is present-->
-            <h1>No video results found for "{{term}}"".</h1>
+            <h1>No video results found for "{{term}}".</h1>
         {% endif %}
 
         <h1 id="aiHeader"></h1> <!-- Header for AI info; handled differently than other API info -->
@@ -278,6 +286,12 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
       var slideIndex = 1;
       var slideIndexIllu = 0;
       var slideIndexVideo = 0;
+      // Get the first slide if slideshow is selected
+      if (getQueryParameter('searchtype') === 'slideshow') {
+        showSlides(slideIndex);
+        showSlidesIllu(slideIndexIllu);
+        showSlidesVideo(slideIndexVideo);
+      }
 
       function plusSlides(n) {
         showSlides(slideIndex += n);
@@ -330,7 +344,8 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         }
         slides[slideIndexVideo-1].style.display = "block";  
       }
-  
+ 
+      //Michael added save state functions
       // Get info from search query
       function getQueryParameter(name) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -341,6 +356,7 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
       window.onload = function () {
         const searchTypeRadio = document.getElementsByName('searchtype');
         const searchType = getQueryParameter('searchtype');
+    
         if (searchType) {
           searchTypeRadio.forEach(function (radio) {
             if (radio.value === searchType) {
@@ -348,10 +364,24 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
             }
           });
         }
+        const aiCheckbox = document.getElementById('generateAI');
+        const aiChecked = getQueryParameter('generateAI') == 'on'; 
+        aiCheckbox.checked = aiChecked;
+        const searchTermInput = document.getElementById('searchterm');
+        const searchTerm = getQueryParameter('searchterm');
+    
+    if (searchTerm) {
+        searchTermInput.value = searchTerm;
+    }
       };
 
-      // Function will call the API route and create image elements with the returned info
+     
       // Worked on by Judah Silva
+      // Don't call AI Image api if nothing has been searched
+      if (getQueryParameter('generateAI') == "on") {
+        fetchImages();
+      }
+       // Function will call the API route and create image elements with the returned info
       async function fetchImages() {
         try {
           // Create a header and placeholder images with loading gifs
@@ -381,13 +411,13 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
             // Loop through the returned array and fill out the image elements
             data.forEach((imageURL) => {
               const div = document.createElement('div'); // Create a new div
-        div.classList.add('zoom'); // Add the class 'zoom' to the div
-        const img = document.createElement('img');
-        // Credit: https://www.geeksforgeeks.org/how-to-display-base64-images-in-html/
-        img.src = `data:image/png;base64,${imageURL['data']}`;
-        img.style.width = '300px';
-        div.appendChild(img); // Append the img to the div
-        imageDiv.appendChild(div); // Append the div to the imageDiv
+            div.classList.add('zoom'); // Add the class 'zoom' to the div
+            const img = document.createElement('img');
+            // Credit: https://www.geeksforgeeks.org/how-to-display-base64-images-in-html/
+            img.src = `data:image/png;base64,${imageURL['data']}`;
+            img.style.width = '300px';
+            div.appendChild(img); // Append the img to the div
+            imageDiv.appendChild(div); // Append the div to the imageDiv
             });
           }
         } catch (error) {
@@ -395,16 +425,8 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         }
       }
 
-      // Don't call AI Image api if nothing has been searched
-      if (getQueryParameter('searchterm') !== null) {
-        fetchImages();
-      }
-      // Get the first slide if slideshow is selected
-      if (getQueryParameter('searchtype') === 'slideshow') {
-        showSlides(slideIndex);
-        showSlidesIllu(slideIndexIllu);
-        showSlidesVideo(slideIndexVideo);
-      }
+    
+     
     </script>
 </body>
 </html>

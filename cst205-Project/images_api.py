@@ -15,7 +15,7 @@ import requests
 # from datetime import datetime
 
 # Function to call image api and return array of jsons and array of strings
-# Worked on by Nikolas Lopez
+# Created by Nikolas
 def get_photos(search_term, pixa_bay_key):
     photos = []
     unique_tags = []
@@ -40,7 +40,7 @@ def get_photos(search_term, pixa_bay_key):
     return photos,unique_tags
 
 # Function to call image api for illustrations and return array of jsons
-# Worked on Nikolas Lopez
+# Worked on by Michael
 def get_illustrations(search_term, pixa_bay_key):
     illustrations = []
     illustration_r = requests.get(f"https://pixabay.com/api/?key={pixa_bay_key}&q={search_term}&image_type=illustration")
