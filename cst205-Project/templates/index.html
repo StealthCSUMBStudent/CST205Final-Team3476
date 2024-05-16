@@ -367,6 +367,12 @@ Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
         const aiCheckbox = document.getElementById('generateAI');
         const aiChecked = getQueryParameter('generateAI') == 'on'; 
         aiCheckbox.checked = aiChecked;
+        const searchTermInput = document.getElementById('searchterm');
+        const searchTerm = getQueryParameter('searchterm');
+    
+    if (searchTerm) {
+        searchTermInput.value = searchTerm;
+    }
       };
 
      
