@@ -27,7 +27,7 @@ tags = []
 terms = ''
 
 # Route to handle image and video api calls, and to render index page
-# Worked on by Michael Hzuiy and Nikolas Lopez
+#Started by Nikolas, finished by Michael
 @app.route('/', methods=['GET', 'POST'])
 def index():
     pixa_bay_key= '43673995-6b601f29737528af485dab3da'#pixabay
@@ -38,9 +38,11 @@ def index():
     global terms
     search_term = request.args.get('searchterm')  # Extract search term from query parameters
     search_type = request.args.get('searchtype')
+    generateAI= request.args.get('generateAI')
     terms = search_term
     print(f"SEARCH TERM: {search_term}")
     print(f"TYPE:{search_type}")
+    print(f'AI?: {generateAI}')
 
     # Call imported functions and store info
     photos = []
@@ -53,7 +55,7 @@ def index():
     global tags
     tags = unique_tags.copy()
 
-    #Video api
+    #Video api, Michael
     videos = []
     headers = {
     'Authorization': pexel_key
@@ -93,6 +95,7 @@ def index():
 # Worked on by Judah Silva
 @app.route('/api/aiImages')
 def aiGeneration():
+    print("INSIDE AI API")
     # Create prompt based off of tags/search terms
     prompt = ' '.join(tags)
     # prompt = terms
