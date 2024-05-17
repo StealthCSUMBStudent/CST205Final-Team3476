@@ -8,6 +8,8 @@ Our Trello: https://trello.com/b/thY1CSK9/cst205-final-project-3476
 
 Our Github: https://github.com/StealthCSUMBStudent/CST205Final-Team3476/tree/main
 
+Our Google Slides: https://docs.google.com/presentation/d/1dovV6y2LJxArtC6gBBoSuH-Vd1wIkQCYtILCTVURNWg/edit?usp=sharing
+
 Our project is an image and video search, combined with AI image generation as well. 
 We are utilizing the Pixabay API to return images, Pexels API to retrieve videos based on keywords, and RapidAPI to generate AI content.
 Two options exist, one to show a grid view of the images/videos, and one to get a slideshow of them
